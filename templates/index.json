@@ -1,0 +1,8 @@
+{
+  "templates": [
+    { "id": "cute-star-01", "file": "cute/star.json" },
+    { "id": "nature-leaf-01", "file": "nature/leaf.json" },
+    { "id": "mandala-pattern-01", "file": "mandala/pattern-01.json" },
+    { "id": "pixel-heart-01", "file": "pixel/heart.json" }
+  ]
+}
