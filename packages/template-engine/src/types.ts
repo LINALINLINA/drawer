@@ -21,5 +21,7 @@ export type Template = {
   difficulty: TemplateDifficulty;
   viewBox: { x: number; y: number; w: number; h: number };
   regions: Region[];
+  /** 原始线条的 PNG 图像路径（相对于 /templates/ 目录），用 multiply 混合叠加显示线条 */
+  outlineImage?: string;
   thumbnail: string;
 };

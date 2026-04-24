@@ -31,7 +31,11 @@ export function useCanvasEngine(
     if (!engine || !template) return;
 
     if (templateIdRef.current !== template.id) {
-      engine.setTemplate(template.regions);
+      // outlineImage 是相对路径，加 /templates/ 前缀变成可访问的 URL
+      const outlineUrl = template.outlineImage
+        ? `/templates/${template.outlineImage}`
+        : undefined;
+      engine.setTemplate(template.regions, outlineUrl);
       templateIdRef.current = template.id;
     }
 

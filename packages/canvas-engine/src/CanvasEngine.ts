@@ -22,6 +22,7 @@ export class CanvasEngine {
 
   private cache = new TemplateCache();
   private regions: HitRegion[] = [];
+  private outlineImg: HTMLImageElement | null = null;
   private _lastState: CanvasState = {
     fills: {},
     strokes: [],
@@ -55,11 +56,22 @@ export class CanvasEngine {
     container.appendChild(this.drawCanvas);
   }
 
-  setTemplate(regions: RegionInput[]): void {
+  setTemplate(regions: RegionInput[], outlineImageUrl?: string): void {
     this.regions = regions.map((r) => ({
       ...r,
       path2d: new Path2D(r.path),
     }));
+    // 异步加载轮廓 PNG（加载完成后触发重渲染）
+    this.outlineImg = null;
+    if (outlineImageUrl) {
+      const img = new Image();
+      img.onload = () => {
+        this.outlineImg = img;
+        // 图片加载完成后重渲染
+        this.renderTemplate(this._lastState.fills);
+      };
+      img.src = outlineImageUrl;
+    }
   }
 
   render(state: CanvasState): void {
@@ -69,17 +81,37 @@ export class CanvasEngine {
   }
 
   private renderTemplate(fills: Record<string, string>): void {
-    this.cache.build(this.width, this.height, this.regions, fills);
+    const ctx = this.templateCtx;
+    ctx.clearRect(0, 0, this.width, this.height);
 
-    this.templateCtx.clearRect(0, 0, this.width, this.height);
+    // ① 白色底色（multiply 混合模式需要白底，否则透明区域混合结果不正确）
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, this.width, this.height);
 
-    for (const region of this.regions) {
-      const color = fills[region.id] || "#f0f0f0";
-      this.templateCtx.fillStyle = color;
-      this.templateCtx.fill(region.path2d);
-      this.templateCtx.strokeStyle = "#4a4238";
-      this.templateCtx.lineWidth = 2;
-      this.templateCtx.stroke(region.path2d);
+    if (this.outlineImg) {
+      // ── 有轮廓 PNG 时：填色区域 + multiply 线条叠加 ──
+      // ② 填充用户已着色的区域
+      for (const region of this.regions) {
+        const color = fills[region.id];
+        if (color) {
+          ctx.fillStyle = color;
+          ctx.fill(region.path2d);
+        }
+      }
+      // ③ multiply 叠加原始线条 PNG（黑色像素保持黑色，白色像素透明显示下方颜色）
+      ctx.globalCompositeOperation = "multiply";
+      ctx.drawImage(this.outlineImg, 0, 0, this.width, this.height);
+      ctx.globalCompositeOperation = "source-over";
+    } else {
+      // ── 无轮廓 PNG 时（手工/SVG 模板）：沿用旧的 fill + stroke 方式 ──
+      for (const region of this.regions) {
+        const color = fills[region.id] || "#f5f0ea";
+        ctx.fillStyle = color;
+        ctx.fill(region.path2d);
+        ctx.strokeStyle = "#4a4238";
+        ctx.lineWidth = 2;
+        ctx.stroke(region.path2d);
+      }
     }
   }
 
@@ -141,9 +173,8 @@ export class CanvasEngine {
     const ctx = exportCanvas.getContext("2d")!;
     ctx.scale(scale, scale);
 
-    const cached = this.cache.getCanvas();
-    if (cached) ctx.drawImage(cached, 0, 0);
-
+    // 直接使用 templateCanvas（包含填色 + outlinePath 轮廓层）
+    ctx.drawImage(this.templateCanvas, 0, 0);
     ctx.drawImage(this.drawCanvas, 0, 0);
 
     return exportCanvas.convertToBlob({ type: "image/png" });

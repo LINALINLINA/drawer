@@ -102,7 +102,15 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   strokeSettings: { color: "#000000", width: 3, style: "solid" },
   selectedStamp: null,
 
-  setTemplate: (template) => set({ template }),
+  setTemplate: (template) => {
+    const fresh = { ...INITIAL_STATE };
+    set({
+      template,
+      canvasState: fresh,
+      history: [cloneState(fresh)],
+      historyIndex: 0,
+    });
+  },
   setActiveColor: (color) =>
     set((s) => ({
       activeColor: color,

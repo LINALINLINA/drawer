@@ -10,16 +10,19 @@ import BottomNav from "../components/BottomNav";
 
 const categories = [
   { key: "all", label: "全部" },
-  { key: "cute", label: "可爱风" },
-  { key: "nature", label: "自然风" },
-  { key: "mandala", label: "Mandala" },
+  { key: "easy", label: "入门" },
+  { key: "medium", label: "进阶" },
+  { key: "hard", label: "挑战" },
 ] as const;
 
 const categoryIcons: Record<string, string> = {
   all: "M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L4 7h5.5z",
-  cute: "M12 8c-3 0-5 2-5 5s2 5 5 5 5-2 5-5-2-5-5-5zm0 7a2 2 0 110-4 2 2 0 010 4z",
-  nature: "M12 3C8 7 5 10 5 14a7 7 0 1014 0c0-4-3-7-7-11z",
-  mandala: "M12 2l2.5 5h5.5l-4.5 3.5 1.5 5.5L12 13l-5 3 1.5-5.5L4 7h5.5z",
+  // 入门：笑脸
+  easy: "M12 2a10 10 0 100 20A10 10 0 0012 2zm-3 12.5c.8 1.5 4.2 1.5 6 0M9 9h.01M15 9h.01",
+  // 进阶：半颗星
+  medium: "M12 2l2.5 5h5.5l-4.5 3.5 1.5 5.5L12 13V2z",
+  // 挑战：闪电
+  hard: "M13 2L4 14h7l-1 8 9-12h-7l1-8z",
 };
 
 export default function Home() {

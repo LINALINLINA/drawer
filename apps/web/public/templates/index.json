@@ -1,252 +1,452 @@
 {
   "templates": [
     {
-      "id": "cute-castle",
-      "file": "cute/castle.json",
-      "name": "城堡",
-      "category": "cute",
-      "difficulty": "hard",
-      "regionCount": 27
-    },
-    {
-      "id": "cute-cat",
-      "file": "cute/cat.json",
-      "name": "猫咪",
-      "category": "cute",
-      "difficulty": "hard",
-      "regionCount": 12
-    },
-    {
-      "id": "cute-rabbit",
-      "file": "cute/rabbit.json",
-      "name": "兔子",
-      "category": "cute",
-      "difficulty": "hard",
-      "regionCount": 15
-    },
-    {
-      "id": "cute-star-01",
-      "file": "cute/star.json",
-      "name": "星星",
-      "category": "cute",
-      "difficulty": "easy",
-      "regionCount": 6
-    },
-    {
-      "id": "cute-小猫咪",
-      "file": "cute/cute-小猫咪.json",
-      "name": "小猫咪",
-      "category": "cute",
-      "difficulty": "hard",
-      "regionCount": 30
-    },
-    {
-      "id": "mandala-complex-01",
-      "file": "mandala/complex-01.json",
-      "name": "复杂花纹",
-      "category": "mandala",
-      "difficulty": "hard",
-      "regionCount": 71
-    },
-    {
-      "id": "mandala-pattern-01",
-      "file": "mandala/pattern-01.json",
-      "name": "曼陀罗",
-      "category": "mandala",
+      "id": "medium-091f4c6675c16929156e839e74a7ca",
+      "file": "medium/medium-091f4c6675c16929156e839e74a7ca.json",
+      "name": "091f4c6675c16929156e839e74a7caae",
+      "category": "medium",
       "difficulty": "medium",
-      "regionCount": 9
-    },
-    {
-      "id": "mandala-rose",
-      "file": "mandala/rose.json",
-      "name": "玫瑰花纹",
-      "category": "mandala",
-      "difficulty": "hard",
-      "regionCount": 16
-    },
-    {
-      "id": "mandala-snowflake",
-      "file": "mandala/snowflake.json",
-      "name": "雪花",
-      "category": "mandala",
-      "difficulty": "hard",
-      "regionCount": 25
-    },
-    {
-      "id": "mandala-ultra-01",
-      "file": "mandala/ultra-01.json",
-      "name": "超级花纹",
-      "category": "mandala",
-      "difficulty": "hard",
-      "regionCount": 133
-    },
-    {
-      "id": "nature-6ec3d76e21d9c144f5a907e7be0b86",
-      "file": "nature/nature-6ec3d76e21d9c144f5a907e7be0b86.json",
-      "name": "石头纹",
-      "category": "nature",
-      "difficulty": "hard",
-      "regionCount": 16
-    },
-    {
-      "id": "nature-b56e5b22f85cd593eadf5ddad4726d",
-      "file": "nature/nature-b56e5b22f85cd593eadf5ddad4726d.json",
-      "name": "抽象图案",
-      "category": "nature",
-      "difficulty": "hard",
-      "regionCount": 24
-    },
-    {
-      "id": "nature-bouquet-of-flowers-in-a-floral",
-      "file": "nature/nature-bouquet-of-flowers-in-a-floral.json",
-      "name": "花环",
-      "category": "nature",
-      "difficulty": "hard",
-      "regionCount": 17
-    },
-    {
-      "id": "nature-bouquet-of-flowers-with-fruit-",
-      "file": "nature/nature-bouquet-of-flowers-with-fruit-.json",
-      "name": "花果篮",
-      "category": "nature",
-      "difficulty": "hard",
-      "regionCount": 24
-    },
-    {
-      "id": "nature-butterfly",
-      "file": "nature/butterfly.json",
-      "name": "蝴蝶",
-      "category": "nature",
-      "difficulty": "hard",
-      "regionCount": 14
-    },
-    {
-      "id": "nature-butterfly-02",
-      "file": "nature/butterfly-02.json",
-      "name": "蝴蝶 II",
-      "category": "nature",
-      "difficulty": "hard",
       "regionCount": 26
     },
     {
-      "id": "nature-dreamcatcher",
-      "file": "nature/dreamcatcher.json",
-      "name": "捕梦网",
-      "category": "nature",
+      "id": "hard-130c779d513d937fb0726d70d3feae",
+      "file": "hard/hard-130c779d513d937fb0726d70d3feae.json",
+      "name": "130c779d513d937fb0726d70d3feae4d",
+      "category": "hard",
       "difficulty": "hard",
-      "regionCount": 65
+      "regionCount": 50
     },
     {
-      "id": "nature-flower",
-      "file": "nature/flower.json",
-      "name": "花朵",
-      "category": "nature",
-      "difficulty": "hard",
-      "regionCount": 15
+      "id": "medium-1c8c03c71737eb40f118132fa87b69",
+      "file": "medium/medium-1c8c03c71737eb40f118132fa87b69.json",
+      "name": "1c8c03c71737eb40f118132fa87b692e",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 41
     },
     {
-      "id": "nature-garden",
-      "file": "nature/garden.json",
-      "name": "花园",
-      "category": "nature",
+      "id": "medium-1ee9e237fae0064a8ee66cb7d30f8c",
+      "file": "medium/medium-1ee9e237fae0064a8ee66cb7d30f8c.json",
+      "name": "1ee9e237fae0064a8ee66cb7d30f8c02",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 45
+    },
+    {
+      "id": "medium-2b8501227166e7226653361c2545d9",
+      "file": "medium/medium-2b8501227166e7226653361c2545d9.json",
+      "name": "2b8501227166e7226653361c2545d9d5",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 26
+    },
+    {
+      "id": "hard-4c6668d872cc433bf8f325c79a3e7d",
+      "file": "hard/hard-4c6668d872cc433bf8f325c79a3e7d.json",
+      "name": "4c6668d872cc433bf8f325c79a3e7da3",
+      "category": "hard",
+      "difficulty": "hard",
+      "regionCount": 119
+    },
+    {
+      "id": "hard-4f6a532bb1c5b07c93887aeb9c1b09",
+      "file": "hard/hard-4f6a532bb1c5b07c93887aeb9c1b09.json",
+      "name": "4f6a532bb1c5b07c93887aeb9c1b0991",
+      "category": "hard",
+      "difficulty": "hard",
+      "regionCount": 99
+    },
+    {
+      "id": "medium-5009bfc872e6e277bf4f509934197f",
+      "file": "medium/medium-5009bfc872e6e277bf4f509934197f.json",
+      "name": "5009bfc872e6e277bf4f509934197fb8",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 34
+    },
+    {
+      "id": "hard-823992901d172efa016dbff42cdab6",
+      "file": "hard/hard-823992901d172efa016dbff42cdab6.json",
+      "name": "823992901d172efa016dbff42cdab69c",
+      "category": "hard",
+      "difficulty": "hard",
+      "regionCount": 82
+    },
+    {
+      "id": "hard-83947e7d10f11386c18f03f82fe113",
+      "file": "hard/hard-83947e7d10f11386c18f03f82fe113.json",
+      "name": "83947e7d10f11386c18f03f82fe11331",
+      "category": "hard",
+      "difficulty": "hard",
+      "regionCount": 173
+    },
+    {
+      "id": "medium-8449204d008ed90bb38d0dbfc308f2",
+      "file": "medium/medium-8449204d008ed90bb38d0dbfc308f2.json",
+      "name": "8449204d008ed90bb38d0dbfc308f2f6",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 18
+    },
+    {
+      "id": "hard-844c935ed49d239007bdbbe535cf4c",
+      "file": "hard/hard-844c935ed49d239007bdbbe535cf4c.json",
+      "name": "844c935ed49d239007bdbbe535cf4c2b",
+      "category": "hard",
+      "difficulty": "hard",
+      "regionCount": 81
+    },
+    {
+      "id": "hard-919c501ae1c809201528cf9b3d061a",
+      "file": "hard/hard-919c501ae1c809201528cf9b3d061a.json",
+      "name": "919c501ae1c809201528cf9b3d061af5",
+      "category": "hard",
       "difficulty": "hard",
       "regionCount": 94
     },
     {
-      "id": "nature-image-071976771819726",
-      "file": "nature/nature-image-071976771819726.json",
-      "name": "叶片",
-      "category": "nature",
-      "difficulty": "easy",
-      "regionCount": 2
+      "id": "hard-9fccb1adba09cba93d7cc894229257",
+      "file": "hard/hard-9fccb1adba09cba93d7cc894229257.json",
+      "name": "9fccb1adba09cba93d7cc894229257a4",
+      "category": "hard",
+      "difficulty": "hard",
+      "regionCount": 49
     },
     {
-      "id": "nature-image-512706535196350",
-      "file": "nature/nature-image-512706535196350.json",
-      "name": "野花",
-      "category": "nature",
+      "id": "hard-dreamcatcher-01",
+      "file": "hard/hard-dreamcatcher-01.json",
+      "name": "捕梦网",
+      "category": "hard",
+      "difficulty": "hard",
+      "regionCount": 65
+    },
+    {
+      "id": "medium-butterfly-02",
+      "file": "medium/medium-butterfly-02.json",
+      "name": "彩蝶纷飞",
+      "category": "medium",
       "difficulty": "medium",
+      "regionCount": 26
+    },
+    {
+      "id": "easy-盗墓笔记-2",
+      "file": "easy/easy-盗墓笔记-2.json",
+      "name": "盗墓笔记 2",
+      "category": "easy",
+      "difficulty": "easy",
       "regionCount": 9
     },
     {
-      "id": "nature-image-516456063669952",
-      "file": "nature/nature-image-516456063669952.json",
-      "name": "简约植物",
-      "category": "nature",
-      "difficulty": "easy",
-      "regionCount": 2
-    },
-    {
-      "id": "nature-image-588383997518213",
-      "file": "nature/nature-image-588383997518213.json",
-      "name": "花卉静物",
-      "category": "nature",
+      "id": "hard-complex-01",
+      "file": "hard/hard-complex-01.json",
+      "name": "繁花曼陀罗",
+      "category": "hard",
       "difficulty": "hard",
-      "regionCount": 23
+      "regionCount": 71
     },
     {
-      "id": "nature-image-698076929508820",
-      "file": "nature/nature-image-698076929508820.json",
-      "name": "简笔花卉",
-      "category": "nature",
-      "difficulty": "easy",
-      "regionCount": 11
-    },
-    {
-      "id": "nature-image-918477046244201",
-      "file": "nature/nature-image-918477046244201.json",
-      "name": "小草",
-      "category": "nature",
-      "difficulty": "easy",
-      "regionCount": 2
-    },
-    {
-      "id": "nature-koi",
-      "file": "nature/koi.json",
-      "name": "锦鲤",
-      "category": "nature",
-      "difficulty": "hard",
-      "regionCount": 30
-    },
-    {
-      "id": "nature-leaf-01",
-      "file": "nature/leaf.json",
-      "name": "树叶",
-      "category": "nature",
-      "difficulty": "easy",
-      "regionCount": 4
-    },
-    {
-      "id": "nature-peacock",
-      "file": "nature/peacock.json",
-      "name": "孔雀",
-      "category": "nature",
-      "difficulty": "hard",
-      "regionCount": 121
-    },
-    {
-      "id": "nature-peony",
-      "file": "nature/peony.json",
-      "name": "牡丹",
-      "category": "nature",
-      "difficulty": "hard",
-      "regionCount": 46
-    },
-    {
-      "id": "nature-underwater",
-      "file": "nature/underwater.json",
+      "id": "hard-underwater-01",
+      "file": "hard/hard-underwater-01.json",
       "name": "海底世界",
-      "category": "nature",
+      "category": "hard",
       "difficulty": "hard",
       "regionCount": 92
     },
     {
-      "id": "nature-weixin-image-20260424144405-22",
-      "file": "nature/nature-weixin-image-20260424144405-22.json",
-      "name": "微信花卉",
-      "category": "nature",
+      "id": "easy-butterfly-01",
+      "file": "easy/easy-butterfly-01.json",
+      "name": "蝴蝶",
+      "category": "easy",
+      "difficulty": "easy",
+      "regionCount": 14
+    },
+    {
+      "id": "hard-garden-01",
+      "file": "hard/hard-garden-01.json",
+      "name": "花园全景",
+      "category": "hard",
       "difficulty": "hard",
-      "regionCount": 13
+      "regionCount": 94
+    },
+    {
+      "id": "medium-koi-01",
+      "file": "medium/medium-koi-01.json",
+      "name": "锦鲤戏水",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 30
+    },
+    {
+      "id": "hard-peacock-01",
+      "file": "hard/hard-peacock-01.json",
+      "name": "孔雀开屏",
+      "category": "hard",
+      "difficulty": "hard",
+      "regionCount": 121
+    },
+    {
+      "id": "medium-库米洛",
+      "file": "medium/medium-库米洛.json",
+      "name": "库米洛",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 28
+    },
+    {
+      "id": "easy-pattern-01",
+      "file": "easy/easy-pattern-01.json",
+      "name": "莲花",
+      "category": "easy",
+      "difficulty": "easy",
+      "regionCount": 9
+    },
+    {
+      "id": "easy-leaf-01",
+      "file": "easy/easy-leaf-01.json",
+      "name": "绿叶",
+      "category": "easy",
+      "difficulty": "easy",
+      "regionCount": 4
+    },
+    {
+      "id": "hard-猫咪",
+      "file": "hard/hard-猫咪.json",
+      "name": "猫咪",
+      "category": "hard",
+      "difficulty": "hard",
+      "regionCount": 151
+    },
+    {
+      "id": "medium-rose-01",
+      "file": "medium/medium-rose-01.json",
+      "name": "玫瑰花",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 16
+    },
+    {
+      "id": "hard-peony-01",
+      "file": "hard/hard-peony-01.json",
+      "name": "牡丹花",
+      "category": "hard",
+      "difficulty": "hard",
+      "regionCount": 46
+    },
+    {
+      "id": "medium-castle-01",
+      "file": "medium/medium-castle-01.json",
+      "name": "童话城堡",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 27
+    },
+    {
+      "id": "hard-ultra-01",
+      "file": "hard/hard-ultra-01.json",
+      "name": "万象曼陀罗",
+      "category": "hard",
+      "difficulty": "hard",
+      "regionCount": 133
+    },
+    {
+      "id": "easy-flower-01",
+      "file": "easy/easy-flower-01.json",
+      "name": "向日葵",
+      "category": "easy",
+      "difficulty": "easy",
+      "regionCount": 15
+    },
+    {
+      "id": "medium-小浣熊",
+      "file": "medium/medium-小浣熊.json",
+      "name": "小浣熊",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 21
+    },
+    {
+      "id": "easy-cat-01",
+      "file": "easy/easy-cat-01.json",
+      "name": "小猫咪",
+      "category": "easy",
+      "difficulty": "easy",
+      "regionCount": 12
+    },
+    {
+      "id": "easy-rabbit-01",
+      "file": "easy/easy-rabbit-01.json",
+      "name": "小兔子",
+      "category": "easy",
+      "difficulty": "easy",
+      "regionCount": 15
+    },
+    {
+      "id": "easy-star-01",
+      "file": "easy/easy-star-01.json",
+      "name": "小星星",
+      "category": "easy",
+      "difficulty": "easy",
+      "regionCount": 6
+    },
+    {
+      "id": "medium-snowflake-01",
+      "file": "medium/medium-snowflake-01.json",
+      "name": "雪花",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 25
+    },
+    {
+      "id": "medium-做作业的鲨鱼",
+      "file": "medium/medium-做作业的鲨鱼.json",
+      "name": "做作业的鲨鱼",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 41
+    },
+    {
+      "id": "medium-af4944b7e42dd90e4031cfe59d7289",
+      "file": "medium/medium-af4944b7e42dd90e4031cfe59d7289.json",
+      "name": "af4944b7e42dd90e4031cfe59d72899c",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 40
+    },
+    {
+      "id": "hard-b2d3731115706ef3df6e7ff8fcca4e",
+      "file": "hard/hard-b2d3731115706ef3df6e7ff8fcca4e.json",
+      "name": "b2d3731115706ef3df6e7ff8fcca4e9a",
+      "category": "hard",
+      "difficulty": "hard",
+      "regionCount": 104
+    },
+    {
+      "id": "medium-b9f2a6ee086ea6f575dda4a46b5710",
+      "file": "medium/medium-b9f2a6ee086ea6f575dda4a46b5710.json",
+      "name": "b9f2a6ee086ea6f575dda4a46b571039",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 36
+    },
+    {
+      "id": "hard-c73b8cefe9bc1ed89a9cbf38522f21",
+      "file": "hard/hard-c73b8cefe9bc1ed89a9cbf38522f21.json",
+      "name": "c73b8cefe9bc1ed89a9cbf38522f21a1",
+      "category": "hard",
+      "difficulty": "hard",
+      "regionCount": 76
+    },
+    {
+      "id": "hard-c9bdfc66d662d658279212cae642a0",
+      "file": "hard/hard-c9bdfc66d662d658279212cae642a0.json",
+      "name": "c9bdfc66d662d658279212cae642a03f",
+      "category": "hard",
+      "difficulty": "hard",
+      "regionCount": 57
+    },
+    {
+      "id": "medium-cb0577f86f7e1d4f9097e59f59c6d1",
+      "file": "medium/medium-cb0577f86f7e1d4f9097e59f59c6d1.json",
+      "name": "cb0577f86f7e1d4f9097e59f59c6d1d2",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 25
+    },
+    {
+      "id": "hard-d3e5ade8903df806b4eee3c3893743",
+      "file": "hard/hard-d3e5ade8903df806b4eee3c3893743.json",
+      "name": "d3e5ade8903df806b4eee3c38937431b",
+      "category": "hard",
+      "difficulty": "hard",
+      "regionCount": 96
+    },
+    {
+      "id": "easy-emotions-angry-tomato-emc3dr",
+      "file": "easy/easy-emotions-angry-tomato-emc3dr.json",
+      "name": "emotions-angry-tomato_eMC3DR",
+      "category": "easy",
+      "difficulty": "easy",
+      "regionCount": 6
+    },
+    {
+      "id": "medium-emotions-confused-robot-gjopqb",
+      "file": "medium/medium-emotions-confused-robot-gjopqb.json",
+      "name": "emotions-confused-robot_gJopQB",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 24
+    },
+    {
+      "id": "easy-emotions-curious-bug-68zxta",
+      "file": "easy/easy-emotions-curious-bug-68zxta.json",
+      "name": "emotions-curious-bug_68ZXta",
+      "category": "easy",
+      "difficulty": "easy",
+      "regionCount": 11
+    },
+    {
+      "id": "easy-emotions-excited-kitten-viuzik",
+      "file": "easy/easy-emotions-excited-kitten-viuzik.json",
+      "name": "emotions-excited-kitten_viuzIk",
+      "category": "easy",
+      "difficulty": "easy",
+      "regionCount": 6
+    },
+    {
+      "id": "easy-emotions-friendly-fish-710wht",
+      "file": "easy/easy-emotions-friendly-fish-710wht.json",
+      "name": "emotions-friendly-fish_710wht",
+      "category": "easy",
+      "difficulty": "easy",
+      "regionCount": 4
+    },
+    {
+      "id": "easy-emotions-joyful-balloon-animal",
+      "file": "easy/easy-emotions-joyful-balloon-animal.json",
+      "name": "emotions-joyful-balloon-animal_3Be8Dy",
+      "category": "easy",
+      "difficulty": "easy",
+      "regionCount": 12
+    },
+    {
+      "id": "easy-emotions-laughing-cat-uhz8uz",
+      "file": "easy/easy-emotions-laughing-cat-uhz8uz.json",
+      "name": "emotions-laughing-cat_uhz8uz",
+      "category": "easy",
+      "difficulty": "easy",
+      "regionCount": 3
+    },
+    {
+      "id": "medium-emotions-nervous-turtle-gvhb9k",
+      "file": "medium/medium-emotions-nervous-turtle-gvhb9k.json",
+      "name": "emotions-nervous-turtle_gVhB9K",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 24
+    },
+    {
+      "id": "hard-emotions-pet-adoption-day-mthk",
+      "file": "hard/hard-emotions-pet-adoption-day-mthk.json",
+      "name": "emotions-pet-adoption-day_MtHKVY",
+      "category": "hard",
+      "difficulty": "hard",
+      "regionCount": 63
+    },
+    {
+      "id": "easy-emotions-weather-faces-jay6pt",
+      "file": "easy/easy-emotions-weather-faces-jay6pt.json",
+      "name": "emotions-weather-faces_JaY6pT",
+      "category": "easy",
+      "difficulty": "easy",
+      "regionCount": 14
+    },
+    {
+      "id": "medium-f4e973a6a62fb714a796b8e078c8b9",
+      "file": "medium/medium-f4e973a6a62fb714a796b8e078c8b9.json",
+      "name": "f4e973a6a62fb714a796b8e078c8b926",
+      "category": "medium",
+      "difficulty": "medium",
+      "regionCount": 35
     }
   ]
 }

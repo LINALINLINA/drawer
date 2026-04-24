@@ -32,7 +32,10 @@ async function traceMaskToPath(
   const imgData = ctx.createImageData(width, height);
 
   for (let i = 0; i < maskData.length; i++) {
-    const v = maskData[i];
+    // potrace 追踪「暗色」像素（0=黑=前景），因此需要反转 mask：
+    //   region 像素（255）→ 0（黑色，potrace 前景，生成该区域的轮廓路径）
+    //   背景像素（0）→ 255（白色，potrace 背景，忽略）
+    const v = maskData[i] === 255 ? 0 : 255;
     imgData.data[i * 4] = v;
     imgData.data[i * 4 + 1] = v;
     imgData.data[i * 4 + 2] = v;
@@ -99,6 +102,47 @@ export async function generateRegionsFromImage(
   );
 
   return tracedRegions.filter((region): region is Region => region !== null);
+}
+
+/**
+ * 追踪整张二值图像中的暗色像素（线条）生成单一轮廓 path。
+ * 与 traceMaskToPath 相反：不反转，让暗色(0)直接作为 potrace 前景。
+ * 用于生成模板的 outlinePath 覆盖层（视觉线条展示）。
+ */
+export async function traceOutlinePath(
+  binaryData: Uint8Array,
+  width: number,
+  height: number,
+): Promise<string | null> {
+  const canvas = createCanvas(width, height);
+  const ctx = canvas.getContext("2d");
+  const imgData = ctx.createImageData(width, height);
+
+  for (let i = 0; i < binaryData.length; i++) {
+    // 不反转：暗色(0)=黑=potrace 前景 → 追踪原始线条
+    const v = binaryData[i];
+    imgData.data[i * 4] = v;
+    imgData.data[i * 4 + 1] = v;
+    imgData.data[i * 4 + 2] = v;
+    imgData.data[i * 4 + 3] = 255;
+  }
+
+  ctx.putImageData(imgData, 0, 0);
+  const pngBuffer = Buffer.from(canvas.toBuffer("image/png"));
+
+  const svg: string = await new Promise((resolve, reject) => {
+    potrace.trace(
+      pngBuffer,
+      { threshold: 128, turdsize: 4, alphamax: 1, optcurve: true },
+      (err: Error | null, tracedSvg: string) => {
+        if (err) reject(err);
+        else resolve(tracedSvg);
+      },
+    );
+  });
+
+  const match = svg.match(/<path[^>]*d="([^"]+)"/);
+  return match?.[1]?.trim() ?? null;
 }
 
 export async function generateAllPaths(

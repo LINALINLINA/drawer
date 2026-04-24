@@ -77,17 +77,32 @@ export default function TemplateCard({
                 : "0 0 400 400"
             }
             preserveAspectRatio="xMidYMid meet"
+            style={{ background: "#ffffff" }}
           >
-            {template.regions.map((r, i) => (
-              <path
-                key={r.id}
-                d={r.path}
-                fill="none"
-                stroke="#5a4a3a"
-                strokeWidth={1}
-                strokeLinejoin="round"
+            {template.outlineImage ? (
+              /* 有轮廓 PNG：multiply 叠加原始线条，视觉清晰 */
+              <image
+                href={`/templates/${template.outlineImage}`}
+                x={template.viewBox?.x ?? 0}
+                y={template.viewBox?.y ?? 0}
+                width={template.viewBox?.w ?? 400}
+                height={template.viewBox?.h ?? 400}
+                style={{ mixBlendMode: "multiply" } as React.CSSProperties}
+                preserveAspectRatio="xMidYMid meet"
               />
-            ))}
+            ) : (
+              /* 无轮廓 PNG（手工/SVG 模板）：用各 region 描边展示 */
+              template.regions.map((r) => (
+                <path
+                  key={r.id}
+                  d={r.path}
+                  fill="none"
+                  stroke="#5a4a3a"
+                  strokeWidth={1}
+                  strokeLinejoin="round"
+                />
+              ))
+            )}
           </svg>
         </div>
         <div
