@@ -124,6 +124,12 @@ function dilateLines(
 }
 
 export interface PreprocessResult {
+  /** 兼容旧调用方：顶层宽度 */
+  width: number;
+  /** 兼容旧调用方：顶层高度 */
+  height: number;
+  /** 兼容旧调用方：顶层数据（默认指向膨胀后的 binary.data） */
+  data: Uint8Array;
   /** 膨胀后的二值图：用于区域检测（dilation 封闭线条断口） */
   binary: BinaryImage;
   /** 原始二值图（无膨胀）：用于轮廓路径生成，保留细线视觉 */
@@ -179,7 +185,15 @@ export async function preprocess(
         }
       : rawBinary;
 
-  return { binary: dilated, rawBinary, cropBox: cropBox ?? undefined };
+  return {
+    // 兼容旧结构，避免历史脚本/测试直接访问 img.width/img.data 报错
+    width: dilated.width,
+    height: dilated.height,
+    data: dilated.data,
+    binary: dilated,
+    rawBinary,
+    cropBox: cropBox ?? undefined,
+  };
 }
 
 export function getPixel(img: BinaryImage, x: number, y: number): number {

@@ -16,8 +16,9 @@ export interface Template {
 }
 
 export function inferDifficulty(regionCount: number): TemplateDifficulty {
-  if (regionCount <= 15) return "easy";
-  if (regionCount <= 45) return "medium";
+  // 难度规则保持与前端筛选/测试约定一致，避免批量生成后难度分布失真
+  if (regionCount <= 5) return "easy";
+  if (regionCount <= 12) return "medium";
   return "hard";
 }
 
