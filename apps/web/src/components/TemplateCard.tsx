@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import type { Template } from "@drawer/template-engine";
 
+const templatesBase = `${import.meta.env.BASE_URL}templates`;
+
 const difficultyLabel: Record<string, string> = {
   easy: "简单",
   medium: "中等",
@@ -82,7 +84,7 @@ export default function TemplateCard({
             {template.outlineImage ? (
               /* 有轮廓 PNG：multiply 叠加原始线条，视觉清晰 */
               <image
-                href={`/templates/${template.outlineImage}`}
+                href={`${templatesBase}/${template.outlineImage}`}
                 x={template.viewBox?.x ?? 0}
                 y={template.viewBox?.y ?? 0}
                 width={template.viewBox?.w ?? 400}

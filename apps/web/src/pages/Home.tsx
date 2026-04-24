@@ -8,6 +8,8 @@ import {
 import TemplateCard from "../components/TemplateCard";
 import BottomNav from "../components/BottomNav";
 
+const templatesBase = `${import.meta.env.BASE_URL}templates`;
+
 const categories = [
   { key: "all", label: "全部" },
   { key: "easy", label: "入门" },
@@ -35,7 +37,7 @@ export default function Home() {
   const loadedRef = useRef(new Set<string>());
 
   useEffect(() => {
-    loadTemplateIndex("/templates/index.json").then((loaded) => {
+    loadTemplateIndex(`${templatesBase}/index.json`).then((loaded) => {
       setEntries(loaded);
       setLoading(false);
       loaded.forEach((e) => fetchTemplate(e));
@@ -45,7 +47,7 @@ export default function Home() {
   const fetchTemplate = (entry: TemplateIndexEntry) => {
     if (loadedRef.current.has(entry.id)) return;
     loadedRef.current.add(entry.id);
-    loadTemplate(`/templates/${entry.file}`).then((t) => {
+    loadTemplate(`${templatesBase}/${entry.file}`).then((t) => {
       if (t) {
         setTemplateMap((prev) => {
           const next = new Map(prev);

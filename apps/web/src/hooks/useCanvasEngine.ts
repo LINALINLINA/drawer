@@ -2,6 +2,8 @@ import { useRef, useCallback } from "react";
 import { CanvasEngine } from "@drawer/canvas-engine";
 import { useEditorStore } from "../stores/editor-store";
 
+const templatesBase = `${import.meta.env.BASE_URL}templates`;
+
 export function useCanvasEngine(
   containerRef: React.RefObject<HTMLDivElement | null>,
 ) {
@@ -33,7 +35,7 @@ export function useCanvasEngine(
     if (templateIdRef.current !== template.id) {
       // outlineImage 是相对路径，加 /templates/ 前缀变成可访问的 URL
       const outlineUrl = template.outlineImage
-        ? `/templates/${template.outlineImage}`
+        ? `${templatesBase}/${template.outlineImage}`
         : undefined;
       engine.setTemplate(template.regions, outlineUrl);
       templateIdRef.current = template.id;

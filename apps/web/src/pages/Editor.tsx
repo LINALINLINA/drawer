@@ -7,6 +7,8 @@ import Toolbar from "../components/Toolbar";
 import ColorPalette from "../components/ColorPalette";
 import StampSelector from "../components/StampSelector";
 
+const templatesBase = `${import.meta.env.BASE_URL}templates`;
+
 export default function Editor() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -45,11 +47,11 @@ export default function Editor() {
 
     const loadAndRender = async () => {
       try {
-        const entries = await loadTemplateIndex("/templates/index.json");
+        const entries = await loadTemplateIndex(`${templatesBase}/index.json`);
         if (!mountedRef.current) return;
         const entry = entries.find((e) => e.id === id);
         if (!entry) return;
-        const t = await loadTemplate(`/templates/${entry.file}`);
+        const t = await loadTemplate(`${templatesBase}/${entry.file}`);
         if (!mountedRef.current || !t || !containerRef.current) return;
 
         init(400, 400);
