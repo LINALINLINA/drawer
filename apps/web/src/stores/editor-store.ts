@@ -54,7 +54,7 @@ type EditorState = {
   removeStamp: (id: string) => void;
   undo: () => void;
   redo: () => void;
-  saveArtwork: () => void;
+  saveArtwork: (thumbnail?: string) => void;
   loadArtwork: (artwork: Artwork) => void;
 };
 
@@ -185,17 +185,22 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     });
   },
 
-  saveArtwork: () => {
+  saveArtwork: (thumbnail?: string) => {
     const { template, canvasState, activePalette } = get();
     if (!template) return;
     const artworks = readArtworksFromStorage();
     const existing = artworks.findIndex((a) => a.templateId === template.id);
+    const now = Date.now();
     const artwork: Artwork = {
       id: existing >= 0 ? artworks[existing].id : crypto.randomUUID(),
       templateId: template.id,
+      templateName: template.name,
       state: cloneState(canvasState),
       palette: activePalette.colors,
-      createdAt: existing >= 0 ? artworks[existing].createdAt : Date.now(),
+      thumbnail:
+        thumbnail ?? (existing >= 0 ? artworks[existing].thumbnail : undefined),
+      createdAt: existing >= 0 ? artworks[existing].createdAt : now,
+      updatedAt: now,
     };
     if (existing >= 0) {
       artworks[existing] = artwork;

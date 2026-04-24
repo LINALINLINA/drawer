@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { loadTemplateIndex, loadTemplate } from "@drawer/template-engine";
-import { useEditorStore } from "../stores/editor-store";
+import { useEditorStore, loadAllArtworks } from "../stores/editor-store";
 import { useCanvasEngine } from "../hooks/useCanvasEngine";
 import Toolbar from "../components/Toolbar";
 import ColorPalette from "../components/ColorPalette";
@@ -54,6 +54,9 @@ export default function Editor() {
 
         init(400, 400);
         useEditorStore.getState().setTemplate(t);
+        // 若有已保存的作品状态则恢复填色
+        const saved = loadAllArtworks().find((a) => a.templateId === t.id);
+        if (saved) useEditorStore.getState().loadArtwork(saved);
         render();
       } catch (err) {
         console.error("[Editor] Failed to load template:", err);
@@ -194,10 +197,32 @@ export default function Editor() {
     [undo],
   );
 
+  /** 生成缩略图 base64 并保存作品（不下载） */
+  const handleSave = useCallback(async () => {
+    const blob = await exportPNG();
+    let thumbnail: string | undefined;
+    if (blob) {
+      // 将 blob 转为 base64 缩略图（约 200×200）
+      thumbnail = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+      });
+    }
+    saveArtwork(thumbnail);
+  }, [exportPNG, saveArtwork]);
+
   const handleExport = useCallback(async () => {
-    saveArtwork();
     const blob = await exportPNG();
     if (!blob) return;
+    // 同步保存（带缩略图）
+    const thumbnail = await new Promise<string>((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.readAsDataURL(blob);
+    });
+    saveArtwork(thumbnail);
+    // 下载文件
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -228,7 +253,10 @@ export default function Editor() {
         }}
       >
         <button
-          onClick={() => navigate("/")}
+          onClick={async () => {
+            await handleSave();
+            navigate("/");
+          }}
           style={{
             border: "none",
             background: "none",
