@@ -4,6 +4,10 @@ import { computeBBox } from "./bbox";
 export type TemplateIndexEntry = {
   id: string;
   file: string;
+  name?: string;
+  category?: string;
+  difficulty?: string;
+  regionCount?: number;
 };
 
 // Ensure a region always has a valid bbox.

@@ -13,12 +13,19 @@ export type Stroke = {
   style: "solid" | "dashed";
 };
 
+export type StampStyle =
+  | "chinese-square"
+  | "chinese-circle"
+  | "chinese-border"
+  | "simple";
+
 export type StampType = "emoji" | "builtin" | "custom";
 
 export type Stamp = {
   id: string;
   type: StampType;
   value: string;
+  style: StampStyle;
   x: number;
   y: number;
   scale: number;
@@ -33,3 +40,10 @@ export type CanvasState = {
 };
 
 export type EditorTool = "fill" | "brush" | "eraser" | "stamp";
+
+export function getStampSize(value: string): number {
+  const len = value.length;
+  if (len <= 1) return 48;
+  if (len <= 2) return 56;
+  return 64;
+}

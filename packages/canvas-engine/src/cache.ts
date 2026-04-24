@@ -22,13 +22,11 @@ export class TemplateCache {
 
     for (const region of regions) {
       const path2d = new Path2D(region.path);
-      const color = fills[region.id];
-      if (color) {
-        ctx.fillStyle = color;
-        ctx.fill(path2d);
-      }
-      ctx.strokeStyle = "#e0e0e0";
-      ctx.lineWidth = 1;
+      const color = fills[region.id] || "#f0f0f0";
+      ctx.fillStyle = color;
+      ctx.fill(path2d);
+      ctx.strokeStyle = "#4a4238";
+      ctx.lineWidth = 2;
       ctx.stroke(path2d);
     }
 

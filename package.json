@@ -12,6 +12,9 @@
     "lint": "turbo run lint"
   },
   "devDependencies": {
+    "@napi-rs/canvas": "^0.1.99",
+    "potrace": "^2.1.8",
+    "sharp": "^0.34.5",
     "turbo": "^2.4.0",
     "typescript": "^5.7.0"
   },

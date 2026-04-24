@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useCallback } from "react";
 import { CanvasEngine } from "@drawer/canvas-engine";
 import { useEditorStore } from "../stores/editor-store";
 
@@ -6,14 +6,23 @@ export function useCanvasEngine(
   containerRef: React.RefObject<HTMLDivElement | null>,
 ) {
   const engineRef = useRef<CanvasEngine | null>(null);
+  const templateIdRef = useRef<string | null>(null);
+
+  const destroyEngine = useCallback(() => {
+    if (engineRef.current) {
+      engineRef.current.destroy();
+      engineRef.current = null;
+    }
+    templateIdRef.current = null;
+  }, []);
 
   const init = useCallback(
     (width: number, height: number) => {
       if (!containerRef.current) return;
-      if (engineRef.current) engineRef.current.destroy();
+      destroyEngine();
       engineRef.current = new CanvasEngine(containerRef.current, width, height);
     },
-    [containerRef],
+    [containerRef, destroyEngine],
   );
 
   const render = useCallback(() => {
@@ -21,7 +30,11 @@ export function useCanvasEngine(
     const { canvasState, template } = useEditorStore.getState();
     if (!engine || !template) return;
 
-    engine.setTemplate(template.regions);
+    if (templateIdRef.current !== template.id) {
+      engine.setTemplate(template.regions);
+      templateIdRef.current = template.id;
+    }
+
     engine.render(canvasState);
   }, []);
 
@@ -43,11 +56,50 @@ export function useCanvasEngine(
     return engine.exportPNG(2);
   }, []);
 
-  useEffect(() => {
-    return () => {
-      engineRef.current?.destroy();
-    };
+  const renderLiveStroke = useCallback(
+    (
+      points: { x: number; y: number }[],
+      color: string,
+      width: number,
+      style: "solid" | "dashed" = "solid",
+    ) => {
+      engineRef.current?.renderLiveStroke(points, color, width, style);
+    },
+    [],
+  );
+
+  const clearDrawLayer = useCallback(() => {
+    engineRef.current?.clearDrawLayer();
   }, []);
 
-  return { init, render, hitTest, exportPNG, engineRef };
+  const redrawDrawLayer = useCallback(() => {
+    engineRef.current?.redrawDrawLayer();
+  }, []);
+
+  const getCanvasCoords = useCallback(
+    (clientX: number, clientY: number): { x: number; y: number } | null => {
+      const canvas = engineRef.current?.getDrawCanvas();
+      if (!canvas) return null;
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      return {
+        x: (clientX - rect.left) * scaleX,
+        y: (clientY - rect.top) * scaleY,
+      };
+    },
+    [],
+  );
+
+  return {
+    init,
+    render,
+    hitTest,
+    exportPNG,
+    destroyEngine,
+    renderLiveStroke,
+    clearDrawLayer,
+    redrawDrawLayer,
+    getCanvasCoords,
+  };
 }

@@ -11,8 +11,8 @@ describe("editor-store", () => {
         stamps: [],
         selectedRegionId: null,
       },
-      history: [],
-      historyIndex: -1,
+      history: [{ fills: {}, strokes: [], stamps: [], selectedRegionId: null }],
+      historyIndex: 0,
       activeTool: "fill",
       activeColor: "#ff0000",
       activePalette: {
@@ -28,17 +28,25 @@ describe("editor-store", () => {
     useEditorStore.getState().fillRegion("r1", "#ff0000");
     const state = useEditorStore.getState();
     expect(state.canvasState.fills["r1"]).toBe("#ff0000");
-    expect(state.history.length).toBe(1);
+    expect(state.history.length).toBe(2); // [initial, with r1]
+    expect(state.historyIndex).toBe(1);
   });
 
   it("undo restores previous state", () => {
-    const store = useEditorStore.getState();
-    store.fillRegion("r1", "#ff0000");
-    store.fillRegion("r2", "#00ff00");
+    useEditorStore.getState().fillRegion("r1", "#ff0000");
+    useEditorStore.getState().fillRegion("r2", "#00ff00");
     useEditorStore.getState().undo();
     const state = useEditorStore.getState();
     expect(state.canvasState.fills["r2"]).toBeUndefined();
     expect(state.canvasState.fills["r1"]).toBe("#ff0000");
+  });
+
+  it("undo can restore to initial empty state", () => {
+    useEditorStore.getState().fillRegion("r1", "#ff0000");
+    useEditorStore.getState().undo();
+    const state = useEditorStore.getState();
+    expect(state.canvasState.fills["r1"]).toBeUndefined();
+    expect(state.historyIndex).toBe(0);
   });
 
   it("redo restores undone state", () => {
@@ -58,6 +66,8 @@ describe("editor-store", () => {
     const state = useEditorStore.getState();
     expect(state.historyIndex).toBe(2);
     expect(state.history.length).toBe(3);
+    expect(state.canvasState.fills["r3"]).toBe("#0000ff");
+    expect(state.canvasState.fills["r2"]).toBeUndefined(); // truncated
   });
 
   it("sets active color", () => {
@@ -90,8 +100,8 @@ describe("editor-store", () => {
     expect(artworks[0].state.fills["r1"]).toBe("#ff0000");
   });
 
-  it("undo does nothing when history is empty", () => {
+  it("undo does nothing when at initial state", () => {
     useEditorStore.getState().undo();
-    expect(useEditorStore.getState().historyIndex).toBe(-1);
+    expect(useEditorStore.getState().historyIndex).toBe(0);
   });
 });

@@ -8,7 +8,9 @@ export type {
   CanvasState,
   Stroke,
   Stamp,
+  StampStyle,
   StampType,
   EditorTool,
   BBox,
 } from "./types";
+export { getStampSize } from "./types";

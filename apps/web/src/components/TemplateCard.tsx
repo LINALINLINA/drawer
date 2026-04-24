@@ -8,68 +8,124 @@ const difficultyLabel: Record<string, string> = {
 };
 
 const difficultyColor: Record<string, string> = {
-  easy: "#4CAF50",
-  medium: "#FF9800",
-  hard: "#F44336",
+  easy: "#7fb685",
+  medium: "#f7c948",
+  hard: "#e8785a",
 };
 
-export default function TemplateCard({ template }: { template: Template }) {
+export default function TemplateCard({
+  template,
+  index,
+}: {
+  template: Template;
+  index: number;
+}) {
   const navigate = useNavigate();
+  const diff = template.difficulty ?? "medium";
+  const rotation = index % 2 === 0 ? -1.5 : 1.5;
 
   return (
     <div
-      onClick={() => navigate(`/editor/${template.id}`)}
       style={{
-        border: "1px solid #e0e0e0",
-        borderRadius: 8,
-        overflow: "hidden",
         cursor: "pointer",
-        background: "#fff",
+        transition: "transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+        transform: `rotate(${rotation}deg)`,
+        opacity: 0,
+        animation: `cardIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) ${index * 0.06}s forwards`,
+        WebkitTapHighlightColor: "transparent",
+        touchAction: "manipulation",
+      }}
+      onClick={() => navigate(`/editor/${template.id}`)}
+      onMouseDown={(e) => {
+        (e.currentTarget as HTMLElement).style.transform = "scale(0.96)";
+      }}
+      onMouseUp={(e) => {
+        (e.currentTarget as HTMLElement).style.transform =
+          `rotate(${rotation}deg)`;
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.transform =
+          `rotate(${rotation}deg)`;
       }}
     >
       <div
         style={{
-          height: 140,
-          background: "#f5f5f5",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          background: "#fffbf5",
+          border: "2.5px solid #5a4a3a",
+          borderRadius: "255px 15px 225px 15px / 15px 225px 15px 255px",
+          overflow: "hidden",
+          boxShadow: "3px 3px 0 rgba(90,74,58,0.06)",
         }}
       >
-        <svg
-          width={80}
-          height={80}
-          viewBox={
-            template.viewBox
-              ? `${template.viewBox.x} ${template.viewBox.y} ${template.viewBox.w} ${template.viewBox.h}`
-              : "0 0 400 400"
-          }
-        >
-          {template.regions.slice(0, 10).map((r) => (
-            <path
-              key={r.id}
-              d={r.path}
-              fill="#ddd"
-              stroke="#ccc"
-              strokeWidth={1}
-            />
-          ))}
-        </svg>
-      </div>
-      <div style={{ padding: "8px 12px" }}>
-        <div style={{ fontWeight: 600, marginBottom: 4 }}>{template.name}</div>
-        <span
+        <div
           style={{
-            fontSize: 12,
-            color: "#fff",
-            background: difficultyColor[template.difficulty],
-            padding: "2px 6px",
-            borderRadius: 4,
+            height: 140,
+            background: "#fefcf8",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 12,
+            overflow: "hidden",
           }}
         >
-          {difficultyLabel[template.difficulty]}
-        </span>
+          <svg
+            width="100%"
+            height="100%"
+            viewBox={
+              template.viewBox
+                ? `${template.viewBox.x} ${template.viewBox.y} ${template.viewBox.w} ${template.viewBox.h}`
+                : "0 0 400 400"
+            }
+            preserveAspectRatio="xMidYMid meet"
+          >
+            {template.regions.map((r, i) => (
+              <path
+                key={r.id}
+                d={r.path}
+                fill="none"
+                stroke="#5a4a3a"
+                strokeWidth={1}
+                strokeLinejoin="round"
+              />
+            ))}
+          </svg>
+        </div>
+        <div
+          style={{
+            padding: "10px 14px",
+            borderTop: "2px dashed #8a7a6a",
+          }}
+        >
+          <div
+            style={{
+              fontWeight: 700,
+              fontSize: 15,
+              color: "#3a322a",
+              marginBottom: 6,
+            }}
+          >
+            {template.name ?? template.id}
+          </div>
+          <span
+            style={{
+              fontSize: 11,
+              color: "#fff",
+              background: difficultyColor[diff] ?? "#f7c948",
+              padding: "2px 8px",
+              borderRadius: "10px 4px 10px 4px",
+            }}
+          >
+            {difficultyLabel[diff] ?? "中等"}
+          </span>
+        </div>
       </div>
+      <style>{`
+        @keyframes cardIn {
+          0% { opacity: 0; transform: scale(0.85) rotate(-2deg); }
+          70% { transform: scale(1.03) rotate(0.5deg); }
+          100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+      `}</style>
     </div>
   );
 }

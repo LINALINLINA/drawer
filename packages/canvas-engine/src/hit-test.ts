@@ -1,4 +1,5 @@
-import type { BBox } from "./types";
+import type { BBox, Stamp } from "./types";
+import { getStampSize } from "./types";
 
 export type HitRegion = {
   id: string;
@@ -6,8 +7,6 @@ export type HitRegion = {
   bbox: BBox;
   path2d: Path2D;
 };
-
-const STAMP_BASE_SIZE = 32;
 
 function pointInBBox(x: number, y: number, bbox: BBox): boolean {
   return (
@@ -33,11 +32,12 @@ export function hitTestRegion(
 export function hitTestStamp(
   x: number,
   y: number,
-  stamps: { id: string; x: number; y: number; scale: number }[],
+  stamps: Stamp[],
 ): string | null {
   for (let i = stamps.length - 1; i >= 0; i--) {
     const s = stamps[i];
-    const half = (STAMP_BASE_SIZE * s.scale) / 2;
+    const size = getStampSize(s.value || "X") * s.scale;
+    const half = size / 2;
     if (
       x >= s.x - half &&
       x <= s.x + half &&

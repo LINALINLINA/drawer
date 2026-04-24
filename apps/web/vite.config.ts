@@ -6,5 +6,5 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  base: "/drawer/",
+  base: process.env.NODE_ENV === "production" ? "/drawer/" : "./",
 });

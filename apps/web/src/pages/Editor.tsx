@@ -5,79 +5,99 @@ import { useEditorStore } from "../stores/editor-store";
 import { useCanvasEngine } from "../hooks/useCanvasEngine";
 import Toolbar from "../components/Toolbar";
 import ColorPalette from "../components/ColorPalette";
+import StampSelector from "../components/StampSelector";
 
 export default function Editor() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { init, render, hitTest, exportPNG } = useCanvasEngine(containerRef);
+  const {
+    init,
+    render,
+    hitTest,
+    exportPNG,
+    destroyEngine,
+    renderLiveStroke,
+    clearDrawLayer,
+    redrawDrawLayer,
+    getCanvasCoords,
+  } = useCanvasEngine(containerRef);
   const [drawing, setDrawing] = useState(false);
   const currentStrokeRef = useRef<{ x: number; y: number }[]>([]);
+  const mountedRef = useRef(false);
 
   const template = useEditorStore((s) => s.template);
+  const canvasState = useEditorStore((s) => s.canvasState);
   const activeTool = useEditorStore((s) => s.activeTool);
   const activeColor = useEditorStore((s) => s.activeColor);
   const strokeSettings = useEditorStore((s) => s.strokeSettings);
-  const canvasState = useEditorStore((s) => s.canvasState);
   const fillRegion = useEditorStore((s) => s.fillRegion);
-  const addStroke = useEditorStore((s) => s.addStroke);
-  const removeStroke = useEditorStore((s) => s.removeStroke);
   const removeStamp = useEditorStore((s) => s.removeStamp);
   const saveArtwork = useEditorStore((s) => s.saveArtwork);
   const undo = useEditorStore((s) => s.undo);
+  const addStroke = useEditorStore((s) => s.addStroke);
   const addStamp = useEditorStore((s) => s.addStamp);
   const selectedStamp = useEditorStore((s) => s.selectedStamp);
 
-  // Load template
   useEffect(() => {
     if (!id) return;
-    loadTemplateIndex("/templates/index.json").then((entries) => {
-      const entry = entries.find((e) => e.id === id);
-      if (!entry) {
-        console.error("Template not found:", id);
-        return;
+    mountedRef.current = true;
+
+    const loadAndRender = async () => {
+      try {
+        const entries = await loadTemplateIndex("/templates/index.json");
+        if (!mountedRef.current) return;
+        const entry = entries.find((e) => e.id === id);
+        if (!entry) return;
+        const t = await loadTemplate(`/templates/${entry.file}`);
+        if (!mountedRef.current || !t || !containerRef.current) return;
+
+        init(400, 400);
+        useEditorStore.getState().setTemplate(t);
+        render();
+      } catch (err) {
+        console.error("[Editor] Failed to load template:", err);
       }
-      loadTemplate(`/templates/${entry.file}`).then((t) => {
-        if (t) {
-          useEditorStore.getState().setTemplate(t);
-        }
-      });
-    });
-  }, [id]);
+    };
 
-  // Init canvas and render on template change
-  useEffect(() => {
-    if (!template) return;
-    init(400, 400);
-  }, [template, init]);
+    loadAndRender();
 
-  // Re-render on canvasState change
+    return () => {
+      mountedRef.current = false;
+      destroyEngine();
+    };
+  }, [id, init, render, destroyEngine]);
+
   useEffect(() => {
+    if (!mountedRef.current) return;
     render();
   }, [canvasState, render]);
 
-  // Pointer event handlers
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
-      const result = hitTest(e.clientX, e.clientY);
-      if (!result) return;
-
-      if (activeTool === "fill" && result.type === "region") {
-        fillRegion(result.id, activeColor);
-      } else if (activeTool === "eraser") {
-        if (result.type === "stamp") removeStamp(result.id);
-      } else if (activeTool === "stamp" && result.type === "region") {
-        if (selectedStamp) {
+      if (activeTool === "stamp" && selectedStamp) {
+        const coords = getCanvasCoords(e.clientX, e.clientY);
+        if (coords) {
           addStamp({
             id: crypto.randomUUID(),
             type: selectedStamp.type,
             value: selectedStamp.value,
-            x: e.nativeEvent.offsetX ?? e.clientX,
-            y: e.nativeEvent.offsetY ?? e.clientY,
+            style: selectedStamp.style,
+            x: coords.x,
+            y: coords.y,
             scale: 1,
             rotate: 0,
           });
         }
+        return;
+      }
+
+      const result = hitTest(e.clientX, e.clientY);
+
+      if (activeTool === "fill" && result?.type === "region") {
+        fillRegion(result.id, activeColor);
+      } else if (activeTool === "eraser") {
+        if (result?.type === "stamp") removeStamp(result.id);
       } else if (activeTool === "brush") {
         setDrawing(true);
         const canvas = containerRef.current?.querySelector(
@@ -87,12 +107,17 @@ export default function Editor() {
         const rect = canvas.getBoundingClientRect();
         const scaleX = canvas.width / rect.width;
         const scaleY = canvas.height / rect.height;
-        currentStrokeRef.current = [
-          {
-            x: (e.clientX - rect.left) * scaleX,
-            y: (e.clientY - rect.top) * scaleY,
-          },
-        ];
+        const pt = {
+          x: (e.clientX - rect.left) * scaleX,
+          y: (e.clientY - rect.top) * scaleY,
+        };
+        currentStrokeRef.current = [pt];
+        renderLiveStroke(
+          [pt],
+          strokeSettings.color,
+          strokeSettings.width,
+          strokeSettings.style,
+        );
       }
     },
     [
@@ -100,11 +125,12 @@ export default function Editor() {
       activeColor,
       selectedStamp,
       fillRegion,
-      addStroke,
-      removeStroke,
-      removeStamp,
       addStamp,
+      removeStamp,
       hitTest,
+      strokeSettings,
+      renderLiveStroke,
+      getCanvasCoords,
     ],
   );
 
@@ -118,12 +144,29 @@ export default function Editor() {
       const rect = canvas.getBoundingClientRect();
       const scaleX = canvas.width / rect.width;
       const scaleY = canvas.height / rect.height;
-      currentStrokeRef.current.push({
+      const pt = {
         x: (e.clientX - rect.left) * scaleX,
         y: (e.clientY - rect.top) * scaleY,
-      });
+      };
+      currentStrokeRef.current.push(pt);
+
+      clearDrawLayer();
+      redrawDrawLayer();
+      renderLiveStroke(
+        currentStrokeRef.current,
+        strokeSettings.color,
+        strokeSettings.width,
+        strokeSettings.style,
+      );
     },
-    [drawing, activeTool],
+    [
+      drawing,
+      activeTool,
+      strokeSettings,
+      clearDrawLayer,
+      redrawDrawLayer,
+      renderLiveStroke,
+    ],
   );
 
   const handlePointerUp = useCallback(() => {
@@ -141,7 +184,6 @@ export default function Editor() {
     currentStrokeRef.current = [];
   }, [drawing, activeTool, addStroke, strokeSettings]);
 
-  // Two-finger touch undo
   const handleTouchStart = useCallback(
     (e: React.TouchEvent) => {
       if (e.touches.length === 2) {
@@ -152,7 +194,6 @@ export default function Editor() {
     [undo],
   );
 
-  // Export handler
   const handleExport = useCallback(async () => {
     saveArtwork();
     const blob = await exportPNG();
@@ -165,22 +206,25 @@ export default function Editor() {
     URL.revokeObjectURL(url);
   }, [exportPNG, saveArtwork, template]);
 
+  const showColorPalette = activeTool === "fill" || activeTool === "brush";
+  const showStampSelector = activeTool === "stamp";
+
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
         height: "100dvh",
+        background: "#fffbf5",
       }}
     >
+      {/* 手绘风格 Header */}
       <header
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "8px 16px",
-          borderBottom: "1px solid #eee",
-          background: "#fff",
+          padding: "10px 16px 8px",
         }}
       >
         <button
@@ -189,36 +233,80 @@ export default function Editor() {
             border: "none",
             background: "none",
             cursor: "pointer",
-            fontSize: 16,
+            padding: "4px",
+            WebkitTapHighlightColor: "transparent",
+            touchAction: "manipulation",
           }}
         >
-          ← 返回
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M15 19l-7-7 7-7"
+              stroke="#3a322a"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </button>
-        <span style={{ fontWeight: 600 }}>{template?.name ?? "加载中..."}</span>
+        <div style={{ position: "relative" }}>
+          <span
+            style={{
+              fontWeight: 700,
+              fontSize: 16,
+              color: "#3a322a",
+              letterSpacing: 0.5,
+            }}
+          >
+            {template?.name ?? "加载中..."}
+          </span>
+          <svg
+            style={{
+              position: "absolute",
+              bottom: -3,
+              left: -4,
+              width: "calc(100% + 8px)",
+              height: 6,
+            }}
+            viewBox="0 0 120 6"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M2 4Q30 1 60 4T118 2"
+              stroke="#e8785a"
+              strokeWidth="2"
+              fill="none"
+              strokeLinecap="round"
+            />
+          </svg>
+        </div>
         <button
           onClick={handleExport}
           style={{
-            border: "none",
-            background: "#1976D2",
-            color: "#fff",
+            border: "2px solid #3a322a",
+            borderRadius: "8px 3px 8px 3px",
+            background: "#f7c948",
+            color: "#3a322a",
             padding: "6px 12px",
-            borderRadius: 6,
             cursor: "pointer",
-            fontSize: 13,
+            fontSize: 12,
+            fontWeight: 700,
+            WebkitTapHighlightColor: "transparent",
+            touchAction: "manipulation",
           }}
         >
-          💾 导出
+          导出
         </button>
       </header>
 
+      {/* 画布区域 */}
       <main
         style={{
           flex: 1,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#f5f5f5",
           overflow: "hidden",
+          padding: 8,
         }}
       >
         <div
@@ -227,9 +315,10 @@ export default function Editor() {
             width: "100%",
             maxWidth: 400,
             aspectRatio: "1",
-            background: "#fff",
-            borderRadius: 4,
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            borderRadius: "12px 4px 12px 4px",
+            border: "2.5px solid #5a4a3a",
+            boxShadow: "4px 4px 0 rgba(90,74,58,0.08)",
+            overflow: "hidden",
           }}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
@@ -239,7 +328,8 @@ export default function Editor() {
         />
       </main>
 
-      <ColorPalette />
+      {showColorPalette && <ColorPalette />}
+      {showStampSelector && <StampSelector />}
       <Toolbar />
     </div>
   );

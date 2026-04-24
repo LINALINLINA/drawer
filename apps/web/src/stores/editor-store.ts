@@ -3,11 +3,19 @@ import type {
   CanvasState,
   Stroke,
   Stamp,
+  StampStyle,
   EditorTool,
 } from "@drawer/canvas-engine";
 import type { Template } from "@drawer/template-engine";
 import type { Palette } from "@drawer/color-engine";
 import type { Artwork } from "./types";
+
+const INITIAL_STATE: CanvasState = {
+  fills: {},
+  strokes: [],
+  stamps: [],
+  selectedRegionId: null,
+};
 
 type EditorState = {
   template: Template | null;
@@ -18,7 +26,11 @@ type EditorState = {
   activeColor: string;
   activePalette: Palette;
   strokeSettings: { color: string; width: number; style: "solid" | "dashed" };
-  selectedStamp: { type: Stamp["type"]; value: string } | null;
+  selectedStamp: {
+    type: Stamp["type"];
+    value: string;
+    style: StampStyle;
+  } | null;
 
   setTemplate: (template: Template) => void;
   setActiveColor: (color: string) => void;
@@ -32,7 +44,7 @@ type EditorState = {
     }>,
   ) => void;
   setSelectedStamp: (
-    stamp: { type: Stamp["type"]; value: string } | null,
+    stamp: { type: Stamp["type"]; value: string; style: StampStyle } | null,
   ) => void;
 
   fillRegion: (regionId: string, color: string) => void;
@@ -59,11 +71,27 @@ function readArtworksFromStorage(): Artwork[] {
   }
 }
 
+function pushHistory(
+  state: EditorState,
+  newState: CanvasState,
+): Partial<EditorState> {
+  const { history, historyIndex } = state;
+  // 惰性截断：只在新操作时截断未来历史
+  if (historyIndex < history.length - 1) {
+    history.length = historyIndex + 1;
+  }
+  history.push(cloneState(newState));
+  return {
+    canvasState: newState,
+    historyIndex: history.length - 1,
+  };
+}
+
 export const useEditorStore = create<EditorState>((set, get) => ({
   template: null,
-  canvasState: { fills: {}, strokes: [], stamps: [], selectedRegionId: null },
-  history: [],
-  historyIndex: -1,
+  canvasState: { ...INITIAL_STATE },
+  history: [{ ...INITIAL_STATE }],
+  historyIndex: 0,
   activeTool: "fill",
   activeColor: "#ff0000",
   activePalette: {
@@ -75,7 +103,11 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   selectedStamp: null,
 
   setTemplate: (template) => set({ template }),
-  setActiveColor: (color) => set({ activeColor: color }),
+  setActiveColor: (color) =>
+    set((s) => ({
+      activeColor: color,
+      strokeSettings: { ...s.strokeSettings, color },
+    })),
   setActiveTool: (tool) => set({ activeTool: tool }),
   setActivePalette: (palette) => set({ activePalette: palette }),
   setStrokeSettings: (settings) =>
@@ -83,96 +115,65 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   setSelectedStamp: (stamp) => set({ selectedStamp: stamp }),
 
   fillRegion: (regionId, color) => {
-    const { canvasState, history, historyIndex } = get();
-    const newHistory = history.slice(0, historyIndex + 1);
-    newHistory.push(cloneState(canvasState));
-    const newFills = { ...canvasState.fills, [regionId]: color };
-    const newState: CanvasState = { ...canvasState, fills: newFills };
-    set({
-      canvasState: newState,
-      history: newHistory,
-      historyIndex: newHistory.length - 1,
-    });
+    const s = get();
+    const newState: CanvasState = {
+      ...s.canvasState,
+      fills: { ...s.canvasState.fills, [regionId]: color },
+    };
+    set(pushHistory(s, newState));
   },
 
   addStroke: (stroke) => {
-    const { canvasState, history, historyIndex } = get();
-    const newHistory = history.slice(0, historyIndex + 1);
-    newHistory.push(cloneState(canvasState));
+    const s = get();
     const newState: CanvasState = {
-      ...canvasState,
-      strokes: [...canvasState.strokes, stroke],
+      ...s.canvasState,
+      strokes: [...s.canvasState.strokes, stroke],
     };
-    set({
-      canvasState: newState,
-      history: newHistory,
-      historyIndex: newHistory.length - 1,
-    });
+    set(pushHistory(s, newState));
   },
 
   addStamp: (stamp) => {
-    const { canvasState, history, historyIndex } = get();
-    const newHistory = history.slice(0, historyIndex + 1);
-    newHistory.push(cloneState(canvasState));
+    const s = get();
     const newState: CanvasState = {
-      ...canvasState,
-      stamps: [...canvasState.stamps, stamp],
+      ...s.canvasState,
+      stamps: [...s.canvasState.stamps, stamp],
     };
-    set({
-      canvasState: newState,
-      history: newHistory,
-      historyIndex: newHistory.length - 1,
-    });
+    set(pushHistory(s, newState));
   },
 
   removeStroke: (id) => {
-    const { canvasState, history, historyIndex } = get();
-    const newHistory = history.slice(0, historyIndex + 1);
-    newHistory.push(cloneState(canvasState));
+    const s = get();
     const newState: CanvasState = {
-      ...canvasState,
-      strokes: canvasState.strokes.filter((s) => s.id !== id),
+      ...s.canvasState,
+      strokes: s.canvasState.strokes.filter((st) => st.id !== id),
     };
-    set({
-      canvasState: newState,
-      history: newHistory,
-      historyIndex: newHistory.length - 1,
-    });
+    set(pushHistory(s, newState));
   },
 
   removeStamp: (id) => {
-    const { canvasState, history, historyIndex } = get();
-    const newHistory = history.slice(0, historyIndex + 1);
-    newHistory.push(cloneState(canvasState));
+    const s = get();
     const newState: CanvasState = {
-      ...canvasState,
-      stamps: canvasState.stamps.filter((s) => s.id !== id),
+      ...s.canvasState,
+      stamps: s.canvasState.stamps.filter((st) => st.id !== id),
     };
-    set({
-      canvasState: newState,
-      history: newHistory,
-      historyIndex: newHistory.length - 1,
-    });
+    set(pushHistory(s, newState));
   },
 
   undo: () => {
-    const { canvasState, history, historyIndex } = get();
-    if (historyIndex < 0) return;
-    const prev = history[historyIndex];
+    const { history, historyIndex } = get();
+    if (historyIndex <= 0) return;
     set({
-      canvasState: cloneState(prev),
-      history: [...history, cloneState(canvasState)],
-      historyIndex,
+      canvasState: cloneState(history[historyIndex - 1]),
+      historyIndex: historyIndex - 1,
     });
   },
 
   redo: () => {
     const { history, historyIndex } = get();
-    const nextIndex = historyIndex + 1;
-    if (nextIndex >= history.length) return;
+    if (historyIndex + 1 >= history.length) return;
     set({
-      canvasState: cloneState(history[nextIndex]),
-      historyIndex: nextIndex,
+      canvasState: cloneState(history[historyIndex + 1]),
+      historyIndex: historyIndex + 1,
     });
   },
 
@@ -197,10 +198,11 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   },
 
   loadArtwork: (artwork) => {
+    const state = cloneState(artwork.state);
     set({
-      canvasState: cloneState(artwork.state),
-      history: [],
-      historyIndex: -1,
+      canvasState: state,
+      history: [{ ...INITIAL_STATE }, cloneState(state)],
+      historyIndex: 1,
     });
   },
 }));

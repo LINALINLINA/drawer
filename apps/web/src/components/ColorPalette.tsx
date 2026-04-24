@@ -10,24 +10,38 @@ export default function ColorPalette() {
   const palettes = getPalettes();
 
   return (
-    <div style={{ padding: "8px 16px" }}>
+    <div style={{ padding: "8px 16px", background: "#fffbf5" }}>
       <div
-        style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 8 }}
+        style={{
+          display: "flex",
+          gap: 10,
+          overflowX: "auto",
+          paddingBottom: 8,
+          scrollbarWidth: "none",
+          justifyContent: "center",
+        }}
       >
         {activePalette.colors.map((color, i) => (
-          <div
+          <button
             key={i}
             onClick={() => setActiveColor(color)}
             style={{
-              width: 36,
-              height: 36,
+              width: 38,
+              height: 38,
               borderRadius: "50%",
               background: color,
-              border:
-                color === activeColor ? "3px solid #333" : "2px solid #ddd",
+              border: `2.5px solid ${color === activeColor ? "#3a322a" : "#d8c8b8"}`,
               cursor: "pointer",
               flexShrink: 0,
-              transition: "border-color 0.15s",
+              transition: "all 0.2s",
+              transform: color === activeColor ? "scale(1.15)" : "scale(1)",
+              boxShadow:
+                color === activeColor
+                  ? "2px 2px 0 rgba(58,50,42,0.15)"
+                  : "none",
+              padding: 0,
+              WebkitTapHighlightColor: "transparent",
+              touchAction: "manipulation",
             }}
           />
         ))}
@@ -38,27 +52,35 @@ export default function ColorPalette() {
           display: "flex",
           gap: 6,
           alignItems: "center",
-          overflowX: "auto",
+          justifyContent: "center",
+          flexWrap: "wrap",
         }}
       >
-        {palettes.map((p) => (
-          <button
-            key={p.id}
-            onClick={() => setActivePalette(p)}
-            style={{
-              padding: "4px 10px",
-              border: "none",
-              borderRadius: 12,
-              fontSize: 12,
-              background: p.id === activePalette.id ? "#333" : "#f0f0f0",
-              color: p.id === activePalette.id ? "#fff" : "#333",
-              cursor: "pointer",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {p.name}
-          </button>
-        ))}
+        {palettes.map((p) => {
+          const active = p.id === activePalette.id;
+          return (
+            <button
+              key={p.id}
+              onClick={() => setActivePalette(p)}
+              style={{
+                padding: "4px 10px",
+                border: `1.5px solid ${active ? "#3a322a" : "#d8c8b8"}`,
+                borderRadius: "10px 3px 10px 3px",
+                fontSize: 12,
+                fontWeight: 600,
+                background: active ? "#3a322a" : "#fffbf5",
+                color: active ? "#fff" : "#5a4a3a",
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+                transition: "all 0.2s",
+                WebkitTapHighlightColor: "transparent",
+                touchAction: "manipulation",
+              }}
+            >
+              {p.name}
+            </button>
+          );
+        })}
         <button
           onClick={() => {
             const colors = generateRandomPalette(5);
@@ -66,14 +88,19 @@ export default function ColorPalette() {
           }}
           style={{
             padding: "4px 10px",
-            border: "none",
-            borderRadius: 12,
+            border: "1.5px dashed #c8b8a8",
+            borderRadius: "10px 3px 10px 3px",
             fontSize: 12,
-            background: "#f0f0f0",
+            fontWeight: 600,
+            background: "#fffbf5",
+            color: "#5a4a3a",
             cursor: "pointer",
+            transition: "all 0.2s",
+            WebkitTapHighlightColor: "transparent",
+            touchAction: "manipulation",
           }}
         >
-          🎲 随机
+          随机
         </button>
       </div>
     </div>

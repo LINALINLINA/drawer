@@ -69,26 +69,55 @@ export class CanvasEngine {
   }
 
   private renderTemplate(fills: Record<string, string>): void {
-    // Build cache for exportPNG, but render directly onto templateCtx
-    // to avoid cross-canvas drawImage compatibility issues
     this.cache.build(this.width, this.height, this.regions, fills);
 
     this.templateCtx.clearRect(0, 0, this.width, this.height);
 
     for (const region of this.regions) {
-      const color = fills[region.id];
-      if (color) {
-        this.templateCtx.fillStyle = color;
-        this.templateCtx.fill(region.path2d);
-      }
-      this.templateCtx.strokeStyle = "#e0e0e0";
-      this.templateCtx.lineWidth = 1;
+      const color = fills[region.id] || "#f0f0f0";
+      this.templateCtx.fillStyle = color;
+      this.templateCtx.fill(region.path2d);
+      this.templateCtx.strokeStyle = "#4a4238";
+      this.templateCtx.lineWidth = 2;
       this.templateCtx.stroke(region.path2d);
     }
   }
 
   private renderDraw(state: CanvasState): void {
     renderDrawLayer(this.drawCtx, state);
+  }
+
+  renderLiveStroke(
+    points: { x: number; y: number }[],
+    color: string,
+    width: number,
+    style: "solid" | "dashed" = "solid",
+  ): void {
+    if (points.length < 2) return;
+    const ctx = this.drawCtx;
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    if (style === "dashed") {
+      ctx.setLineDash([width * 3, width * 2]);
+    }
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+      ctx.lineTo(points[i].x, points[i].y);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  clearDrawLayer(): void {
+    this.drawCtx.clearRect(0, 0, this.width, this.height);
+  }
+
+  redrawDrawLayer(): void {
+    renderDrawLayer(this.drawCtx, this._lastState);
   }
 
   hitTest(
